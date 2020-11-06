@@ -62,10 +62,16 @@ jobs:
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
           ${{ env.img }} ${{ env.py }} -m pip install -U setuptools wheel
-    - name: Install libffi-devele
+    - name: Install libffi-devel
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
           ${{ env.img }} yum install -y libffi-devel
+    - name: Install libffi-devel
+      run: |
+        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+          ${{ env.img }} ${{ env.py }}/bin/pip wheel \
+            --no-deps --wheel-dir /tmp/wheels --no-binary :all: \
+            argon2-cffi==20.1.0
   macos:
     runs-on: macos-latest
     strategy:
