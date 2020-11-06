@@ -65,7 +65,11 @@ jobs:
     - name: Install libffi-devel
       run: |
         docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-          ${{ env.img }} yum install -y libffi-devel
+          ${{ env.img }} yum install -y libffi-devel git
+    - name: Checkout submodule
+      run: |
+        docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+        ${{ env.img }} git submodule update --init --recursive
     - name: Build wheel
       run: |
         docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
