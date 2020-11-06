@@ -62,6 +62,10 @@ jobs:
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
           ${{ env.img }} ${{ env.py }} -m pip install -U setuptools wheel
+    - name: Install libffi-devele
+      run: |
+        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+          ${{ env.img }} yum install -y libffi-devel
   macos:
     runs-on: macos-latest
     strategy:
