@@ -69,9 +69,7 @@ jobs:
     - name: Build wheel
       run: |
         docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-          ${{ env.img }} ${{ env.py }}/pip wheel \
-            --no-deps --wheel-dir /tmp/wheels --no-binary :all: \
-            argon2-cffi==20.1.0
+        ${{ env.img }} ${{ env.py }} setup.py bdist_wheel
   macos:
     runs-on: macos-latest
     strategy:
