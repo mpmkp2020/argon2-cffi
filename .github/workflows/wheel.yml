@@ -1,10 +1,7 @@
 name: wheels
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: PyPI version (sdist already uploaded)
-        required: true
+  push:
+    branches: ["master"]
 
 jobs:
   manylinux:
