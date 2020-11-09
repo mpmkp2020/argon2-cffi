@@ -60,26 +60,30 @@ jobs:
       run: echo ${{ steps.qemu.outputs.platforms }}
     - name: Install tools
       run: |
-        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+        podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
+         ${{ env.img }} mkdir dist
+    - name: Install tools
+      run: |
+        podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
           ${{ env.img }} ${{ env.py }} -m pip install -U setuptools wheel
     - name: Install libffi-devel
       run: |
-        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+        podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
           ${{ env.img }} yum install -y libffi-devel git
     - name: Checkout submodule
       run: |
-        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+        podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
           ${{ env.img }} git submodule update --init --recursive
     - name: Build wheel
       run: |
-        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+        podman run --rm -v $PWD/dist:/dist:rw--workdir=/ws \
           ${{ env.img }} /opt/python/${{ matrix.pyver }}/bin/pip wheel \
            --no-deps --wheel-dir /tmp/wheels --no-binary :all: \
            argon2-cffi==20.1.0 && \
           ls
     - name: Auditwheels
       run: |
-        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+        podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
           ${{ env.img }} ls /tmp/
           #${{ env.img }} auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
            #find /dist -type f | xargs --verbose --replace unzip -l {} \
