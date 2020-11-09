@@ -74,7 +74,8 @@ jobs:
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
           ${{ env.img }} ${{ env.py }} -m pip wheel --no-deps --wheel-dir /tmp/wheels --no-binary :all: \
-           argon2-cffi==20.1.0
+           argon2-cffi==20.1.0 && \
+           ls /tmp/wheels
     - name: Auditwheels
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
