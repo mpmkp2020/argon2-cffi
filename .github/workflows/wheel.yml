@@ -58,7 +58,7 @@ jobs:
       uses: docker/setup-qemu-action@v1
     - name: Available platforms
       run: echo ${{ steps.qemu.outputs.platforms }}
-    - name: Install tools
+    - name: mkdir dist
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
          ${{ env.img }} mkdir dist
@@ -72,7 +72,7 @@ jobs:
           ${{ env.img }} yum install -y libffi-devel git
     - name: Build wheel
       run: |
-        podman run --rm -v $PWD/dist:/dist:rw--workdir=/ws \
+        podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
           ${{ env.img }} /opt/python/${{ matrix.pyver }}/bin/pip wheel \
            --no-deps --wheel-dir /tmp/wheels --no-binary :all: \
            argon2-cffi==20.1.0 && \
