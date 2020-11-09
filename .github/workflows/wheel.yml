@@ -60,7 +60,7 @@ jobs:
       run: echo ${{ steps.qemu.outputs.platforms }}
     - name: Install tools
       run: |
-        podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
+        podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
          ${{ env.img }} mkdir dist
     - name: Install tools
       run: |
