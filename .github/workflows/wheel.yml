@@ -75,8 +75,11 @@ jobs:
         podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
           ${{ env.img }} /opt/python/${{ matrix.pyver }}/bin/pip wheel \
            --no-deps --wheel-dir /tmp/wheels --no-binary :all: \
-           argon2-cffi==20.1.0 && \
-          auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
+           argon2-cffi==20.1.0 
+    - name: Auditwheel
+      run: |
+        podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
+          ${{ env.img }} auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
           find /dist -type f | xargs --verbose --replace unzip -l {}
   
   macos:
