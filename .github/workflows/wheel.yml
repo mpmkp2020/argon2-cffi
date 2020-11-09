@@ -30,7 +30,7 @@ jobs:
           bash -exc '\
             yum install -y libffi-devel && \
             /opt/python/${{ matrix.name }}/bin/pip wheel \
-              --no-deps --wheel-dir /tmp/wheels --no-binary :all: \
+             --no-deps --wheel-dir /tmp/wheels --no-binary :all: \
               argon2-cffi==20.1.0 && \
             auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
             find /dist -type f | xargs --verbose --replace unzip -l {} \
@@ -74,9 +74,9 @@ jobs:
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
           ${{ env.img }} ${{ env.py }} -m pip wheel --no-deps --wheel-dir /tmp/wheels --no-binary :all: \
-          argon2-cffi==20.1.0 && \
-          ${{ env.img }} auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
-            find /dist -type f | xargs --verbose --replace unzip -l {} \
+           argon2-cffi==20.1.0 && \
+          auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
+          find /dist -type f | xargs --verbose --replace unzip -l {} \
     - name: Auditwheel
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
