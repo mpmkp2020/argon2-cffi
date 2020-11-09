@@ -73,11 +73,13 @@ jobs:
     - name: Build wheel
       run: |
         docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-          ${{ env.img }} ${{ env.py }} setup.py bdist_wheel
+          ${{ env.img }} ${{ env.py }} wheel --no-deps --wheel-dir /tmp/wheels --no-binary :all: argon2-cffi==20.1.0
+          #${{ env.img }} ${{ env.py }} setup.py bdist_wheel
     - name: Auditwheel
       run: |
         docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-          ${{ env.img }} auditwheel repair dist/*.whl
+          ${{ env.img }} auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
+            find /dist -type f | xargs --verbose --replace unzip -l {} \
   macos:
     runs-on: macos-latest
     strategy:
