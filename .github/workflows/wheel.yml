@@ -77,7 +77,8 @@ jobs:
     - name: Auditwheel
       run: |
         docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-        ${{ env.img }} auditwheel repair /dist/*
+        ${{ env.img }} ls
+      #${{ env.img }} auditwheel repair /dist/*
   macos:
     runs-on: macos-latest
     strategy:
