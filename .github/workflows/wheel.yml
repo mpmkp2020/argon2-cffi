@@ -80,6 +80,7 @@ jobs:
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
           ${{ env.img }} auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
             find /dist -type f | xargs --verbose --replace unzip -l {} \
+          '
   macos:
     runs-on: macos-latest
     strategy:
