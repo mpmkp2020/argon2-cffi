@@ -78,8 +78,9 @@ jobs:
     - name: Auditwheels
       run: |
         podman run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-          ${{ env.img }} auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
-           find /dist -type f | xargs --verbose --replace unzip -l {} \
+          ${{ env.img }} ls /tmp/
+          #${{ env.img }} auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
+           #find /dist -type f | xargs --verbose --replace unzip -l {} \
   macos:
     runs-on: macos-latest
     strategy:
