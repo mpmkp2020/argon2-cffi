@@ -74,7 +74,7 @@ jobs:
           '
     - uses: actions/upload-artifact@v2
       with:
-        name: wheels-manylinux-${{ matrix.name }}
+        name: wheels-aarch64_manylinux-${{  matrix.pyver }}
         path: dist/*.whl
   
   macos:
