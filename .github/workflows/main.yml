@@ -88,16 +88,16 @@ jobs:
         run: |
           docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
             ${{ env.img }} ${{ env.py }} -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions && \
-            /opt/python/${{ matrix.pyver }}/bin/tox -e py
+            "${{ env.py }} -m tox"
       - name: "Combine coverage"
         run: |
           docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
             ${{ env.py }} -m coverage combine && \  
             ${{ env.py }} -m coverage xml
-        if: "contains(env.USING_COVERAGE, matrix.pyver)"
+        if: "contains(env.USING_COVERAGE, env.py)"
       - name: "Upload coverage to Codecov"
         uses: "codecov/codecov-action@v1"
-        if: "contains(env.USING_COVERAGE, matrix.pyver)"
+        if: "contains(env.USING_COVERAGE, env.py)"
         with:
           fail_ci_if_error: true
 
