@@ -69,7 +69,7 @@ jobs:
               chown -R $(whoami) /github/home/.cache;
               /opt/python/${{ matrix.PYTHON }}/bin/python -m venv .venv;
               .venv/bin/python -VV;
-              .venv/bin/python-m site;
+              .venv/bin/python -m site;
               .venv/bin/pip install --upgrade pip setuptools wheel;
               .venv/bin/pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions;
               tox --version;
