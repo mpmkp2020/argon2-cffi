@@ -81,11 +81,10 @@ jobs:
             auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
            find /dist -type f | xargs --verbose --replace unzip -l {} \
           '
-    - name: Auditwheel
-      run: |
-        podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
-          ${{ env.img }} auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
-          find /dist -type f | xargs --verbose --replace unzip -l {} 
+    - uses: actions/upload-artifact@v2
+      with:
+        name: wheels-manylinux-${{ matrix.name }}
+        path: dist/*.whl
   
   macos:
     runs-on: macos-latest
