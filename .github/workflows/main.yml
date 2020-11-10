@@ -87,15 +87,11 @@ jobs:
       - name: Install coverage
         run: |
           docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} ${{ env.py }} -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions
-      - name: "Run tox targets for ${{ matrix.python-version }}"
-        run: |
-          docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} ${{ env.py }} -m tox
+            ${{ env.img }} ${{ env.py }} -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions && \
+            ${{ env.py }} -m tox
       - name: "Combine coverage"
         run: |
           docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} set -xe && \
             ${{ env.py }} -m coverage combine && \  
             ${{ env.py }} -m coverage xml
         if: "contains(env.USING_COVERAGE, matrix.pyver)"
