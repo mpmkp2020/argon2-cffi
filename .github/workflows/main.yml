@@ -89,7 +89,7 @@ jobs:
           docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
             ${{ env.img }} ${{ env.py }} -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions && \
             whereis tox && whereis python && \
-            echo $env.py && \
+            echo "${{ env.py }}" && \
             "${{ env.py }} -m tox"
       - name: "Combine coverage"
         run: |
