@@ -78,7 +78,7 @@ jobs:
               /opt/python/${{ matrix.PYTHON.VERSION }}/bin/python -m tox; "
               
               
-system-package:
+  system-package:
     runs-on: "ubuntu-latest"
     name: "Install and test with system package of Argon2."
     steps:
