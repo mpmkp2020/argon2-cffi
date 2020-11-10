@@ -52,60 +52,33 @@ jobs:
           fail_ci_if_error: true
   
   tests_aarch64:
-    name: "Python_aarch64 ${{ matrix.pyver.arch }}"
-    runs-on: "ubuntu-latest"
-    env:
-      USING_COVERAGE: "2.7,3.5,3.6,3.7,3.8"
-      py: /opt/python/${{ matrix.pyver }}/bin/python
-      img: quay.io/pypa/manylinux2014_${{ matrix.arch }}
-
+    name: "${{ matrix.PYTHON.ABI_VERSION }} manylinux2014-aarch64"
+    runs-on: ubuntu-latest
     strategy:
-      matrix:
-        pyver: [cp36-cp36m, cp37-cp37m, cp38-cp38, cp39-cp39]
-        arch: [aarch64]
-
+       matrix:
+        PYTHON:
+          - {VERSION: "cp36-cp36m","cp37-cp37m", "cp38-cp38", "cp39-cp39" }
     steps:
-      - uses: "actions/checkout@v2"
+      - uses: actions/checkout@v2
+      - run: |
+          docker run --rm --privileged hypriot/qemu-register
+      - uses: docker://quay.io/pypa/manylinux2014_aarch64
+        # The weird pip cache nonsense below is due to docker ownership issues. We want
+        # a cache because otherwise we end up building cffi twice.
         with:
-          submodules: "recursive"
-      - name: Set up QEMU
-        id: qemu
-        uses: docker/setup-qemu-action@v1
-      - uses: "actions/setup-python@v2"
-      - name: Check python version
-        run: |
-          docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} ${{ env.py }} -VV
-      - name: Install site
-        run: |
-          docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} ${{ env.py }} -m site
-      - name: Install setuptools
-        run: |
-          docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} ${{ env.py }} -m pip install --upgrade pip setuptools wheel
-      - name: Install coverage
-        run: |
-          docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} \ 
-            bash -exc '\
-               ${{ env.py }} -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions && \
-               whereis tox && whereis python && \
-               "${{ env.py }} -m tox" \
-            '
-      - name: "Combine coverage"
-        run: |
-          docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.py }} -m coverage combine && \  
-            ${{ env.py }} -m coverage xml
-        if: "contains(env.USING_COVERAGE, env.py)"
-      - name: "Upload coverage to Codecov"
-        uses: "codecov/codecov-action@v1"
-        if: "contains(env.USING_COVERAGE, env.py)"
-        with:
-          fail_ci_if_error: true
-
-  system-package:
+          args: |
+              bash -c "set -xe;
+              mkdir -p /github/home/.cache/pip;
+              chown -R $(whoami) /github/home/.cache;
+              /opt/python/${{ matrix.PYTHON.VERSION }}/bin/python -m venv .venv;
+              /opt/python/${{ matrix.PYTHON.VERSION }}/bin/python -VV;
+              /opt/python/${{ matrix.PYTHON.VERSION }}/bin/python -m site;
+              .venv/bin/pip install --upgrade pip setuptools wheel;
+              .venv/bin/pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions;
+              /opt/python/${{ matrix.PYTHON.VERSION }}/bin/python -m tox; "
+              
+              
+system-package:
     runs-on: "ubuntu-latest"
     name: "Install and test with system package of Argon2."
     steps:
