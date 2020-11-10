@@ -73,7 +73,7 @@ jobs:
         uses: docker/setup-qemu-action@v1
       - uses: "actions/setup-python@v2"
         with:
-          python-version: "${{ matrix.pyver }}"
+          python-version: "${{  env.py }}"
       - name: Check python version
         run: |
           docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
