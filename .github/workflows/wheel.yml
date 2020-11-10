@@ -73,16 +73,19 @@ jobs:
     - name: Build wheel
       run: |
         podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
-          ${{ env.img }} /opt/python/${{ matrix.pyver }}/bin/pip wheel \
-           --no-deps --wheel-dir /tmp/wheels --no-binary :all: \
-           argon2-cffi==20.1.0 && \
-          ${{ env.img }} auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
-          find /dist -type f | xargs --verbose --replace unzip -l {}
+          ${{ env.img }} \
+          bash -exc '\
+            /opt/python/${{ matrix.pyver }}/bin/pip wheel \
+             --no-deps --wheel-dir /tmp/wheels --no-binary :all: \
+              argon2-cffi==20.1.0 && \
+            auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
+           find /dist -type f | xargs --verbose --replace unzip -l {} \
+          '
     - name: Auditwheel
       run: |
         podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
           ${{ env.img }} auditwheel repair /tmp/wheels/* --wheel-dir /dist && \
-          find /dist -type f | xargs --verbose --replace unzip -l {}
+          find /dist -type f | xargs --verbose --replace unzip -l {} 
   
   macos:
     runs-on: macos-latest
