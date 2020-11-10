@@ -77,7 +77,7 @@ jobs:
       - name: "Set xe"
         run: |
           docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} ${{ env.py }} set -xe 
+            ${{ env.img }} set -xe 
       - name: Check python version
         run: |
           docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
