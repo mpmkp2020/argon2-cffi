@@ -51,8 +51,6 @@ jobs:
       py: /opt/python/${{ matrix.pyver }}/bin/python
       img: quay.io/pypa/manylinux2014_${{ matrix.arch }}
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
     - name: Set up QEMU
       id: qemu
       uses: docker/setup-qemu-action@v1
@@ -66,15 +64,12 @@ jobs:
       run: |
         podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
           ${{ env.img }} ${{ env.py }} -m pip install -U setuptools wheel
-    - name: Install libffi-devel
-      run: |
-        podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
-          ${{ env.img }} yum install -y libffi-devel git
     - name: Build wheel
       run: |
         podman run --rm -v $PWD/dist:/dist:rw --workdir=/ws \
           ${{ env.img }} \
           bash -exc '\
+             yum install -y libffi-devel && \
             /opt/python/${{ matrix.pyver }}/bin/pip wheel \
              --no-deps --wheel-dir /tmp/wheels --no-binary :all: \
               argon2-cffi==20.1.0 && \
