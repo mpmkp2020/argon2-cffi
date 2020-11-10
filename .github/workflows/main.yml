@@ -52,30 +52,28 @@ jobs:
           fail_ci_if_error: true
   
   tests_aarch64:
-    name: "${{ matrix.PYTHON.ABI_VERSION }} manylinux2014-aarch64"
+    name: "${{ matrix.PYTHON }} manylinux2014-aarch64"
     runs-on: ubuntu-latest
     strategy:
        matrix:
-        PYTHON:
-          - {VERSION: "cp36-cp36m","cp37-cp37m", "cp38-cp38", "cp39-cp39" }
+        PYTHON: [cp36-cp36m, cp37-cp37m, cp38-cp38, cp39-cp39]
     steps:
       - uses: actions/checkout@v2
       - run: |
           docker run --rm --privileged hypriot/qemu-register
       - uses: docker://quay.io/pypa/manylinux2014_aarch64
-        # The weird pip cache nonsense below is due to docker ownership issues. We want
-        # a cache because otherwise we end up building cffi twice.
         with:
           args: |
               bash -c "set -xe;
               mkdir -p /github/home/.cache/pip;
               chown -R $(whoami) /github/home/.cache;
-              /opt/python/${{ matrix.PYTHON.VERSION }}/bin/python -m venv .venv;
-              /opt/python/${{ matrix.PYTHON.VERSION }}/bin/python -VV;
-              /opt/python/${{ matrix.PYTHON.VERSION }}/bin/python -m site;
+              /opt/python/${{ matrix.PYTHON }}/bin/python -m venv .venv;
+              .venv/bin/python -VV;
+              .venv/bin/python-m site;
               .venv/bin/pip install --upgrade pip setuptools wheel;
               .venv/bin/pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions;
-              /opt/python/${{ matrix.PYTHON.VERSION }}/bin/python -m tox; "
+              tox --version;
+              .venv/bin/python -m tox; "
               
               
   system-package:
