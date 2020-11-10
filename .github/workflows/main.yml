@@ -52,7 +52,7 @@ jobs:
           fail_ci_if_error: true
   
   tests_aarch64:
-    name: "Python ${{ matrix.pyver.arch }}"
+    name: "Python_aarch64 ${{ matrix.pyver.arch }}"
     runs-on: "ubuntu-latest"
     env:
       USING_COVERAGE: "2.7,3.5,3.6,3.7,3.8"
@@ -74,10 +74,6 @@ jobs:
       - uses: "actions/setup-python@v2"
         with:
           python-version: "${{ matrix.pyver }}"
-      - name: "Set xe"
-        run: |
-          docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
-            ${{ env.img }} set -xe 
       - name: Check python version
         run: |
           docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
