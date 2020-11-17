@@ -69,6 +69,7 @@ jobs:
               mkdir -p /github/home/.cache/pip;
               chown -R $(whoami) /github/home/.cache;
               /opt/python/${{ matrix.PYTHON }}/bin/python -m venv .venv;
+              source .venv/bin/activate;
               .venv/bin/python -VV;
               .venv/bin/pip install --upgrade pip setuptools wheel;
               find / -type f -name "tox";
