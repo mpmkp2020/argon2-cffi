@@ -59,25 +59,21 @@ jobs:
         PYTHON: [cp36-cp36m, cp37-cp37m, cp38-cp38, cp39-cp39]
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
       - run: |
           docker run --rm --privileged hypriot/qemu-register
       - uses: docker://quay.io/pypa/manylinux2014_aarch64
         with:
           args: |
-              bash -c "set -xe && uname -m;
-              uname -a;
+              bash -c "set -xe;
               mkdir -p /github/home/.cache/pip;
               chown -R $(whoami) /github/home/.cache;
               /opt/python/${{ matrix.PYTHON }}/bin/python -m venv .venv;
               source .venv/bin/activate;
               .venv/bin/python -VV;
-              .venv/bin/pip install --upgrade pip setuptools wheel;
-              find / -type f -name "tox";
-              .venv/bin/pip install --upgrade tox;
-              find / -type f -name "tox";
+              .venv/bin/pip install --upgrade pip setuptools wheel tox;
               .venv/bin/tox --version;
-              whereis tox;
-              which tox;
               .venv/bin/tox -e py; "
               
               
