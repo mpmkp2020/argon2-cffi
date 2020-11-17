@@ -71,7 +71,9 @@ jobs:
               /opt/python/${{ matrix.PYTHON }}/bin/python -m venv .venv;
               .venv/bin/python -VV;
               .venv/bin/pip install --upgrade pip setuptools wheel;
-              .venv/bin/pip install --upgrade tox && tox --version;
+              .venv/bin/pip install --upgrade tox;
+              whereis tox;
+              which tox;
               .venv/bin/tox -e py; "
               
               
