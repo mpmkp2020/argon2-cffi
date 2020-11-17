@@ -74,6 +74,7 @@ jobs:
               find / -type f -name "tox";
               .venv/bin/pip install --upgrade tox;
               find / -type f -name "tox";
+              .venv/bin/tox --version;
               whereis tox;
               which tox;
               .venv/bin/tox -e py; "
