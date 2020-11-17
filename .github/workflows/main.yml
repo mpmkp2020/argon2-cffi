@@ -64,12 +64,12 @@ jobs:
       - uses: docker://quay.io/pypa/manylinux2014_aarch64
         with:
           args: |
-              bash -c "set -xe;
+              bash -c "set -xe && uname -m
+              uname -a
               mkdir -p /github/home/.cache/pip;
               chown -R $(whoami) /github/home/.cache;
               /opt/python/${{ matrix.PYTHON }}/bin/python -m venv .venv;
               .venv/bin/python -VV;
-              #.venv/bin/python -m site;
               .venv/bin/pip install --upgrade pip setuptools wheel;
               .venv/bin/pip install --upgrade tox && tox --version;
               .venv/bin/tox -e py; "
