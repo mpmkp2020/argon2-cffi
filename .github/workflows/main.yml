@@ -52,7 +52,7 @@ jobs:
           fail_ci_if_error: true
   
   tests_aarch64:
-    name: "${{ matrix.PYTHON }} manylinux2014-aarch64"
+    name: "${{ matrix.PYTHON }} manylinux2014-aarch64" 
     runs-on: ubuntu-latest
     strategy:
        matrix:
